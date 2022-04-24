@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\{
     UserController,
@@ -7,9 +9,6 @@ use App\Http\Controllers\Api\{
     ProductController,
     CategoryController
 };
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,22 +25,17 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-
-
-
 Route::prefix('auth')->group(function(){
 
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::post('/cadastro', [AuthController::class, 'register']);
-
 });
 
 
 Route::prefix('produto')->group(function(){
 
     Route::get('/todos', [ProductController::class, 'index']);
-
 });
 
 
@@ -50,7 +44,6 @@ Route::group(['middleware' => ['apiJwt']], function(){
     Route::prefix('usuario')->group(function(){
 
         Route::get('/todos', [UserController::class, 'index']);
-
     });
 
     Route::prefix('produto')->group(function(){
@@ -69,7 +62,6 @@ Route::group(['middleware' => ['apiJwt']], function(){
 
         Route::delete('delete/{id}', [CategoryController::class, 'destroy'])
         ->name('category.destroy');
-
     });
 
     Route::prefix('categoria')->group(function(){
@@ -88,7 +80,6 @@ Route::group(['middleware' => ['apiJwt']], function(){
 
         Route::delete('delete/{id}', [CategoryController::class, 'destroy'])
         ->name('category.destroy');
-
     });
 
 });
