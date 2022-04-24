@@ -4,19 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreUpdateProduct;
-use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use App\Repositories\Product\ProductRepository;
 use App\Services\Product\ProductService;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
     public function __construct(
         private ProductRepository $productRepository
     ){}
+
     /**
-     * Display a listing of the resource.
+     * Lista todos os produtos.
      *
      * @return \Illuminate\Http\Response
      */
@@ -52,14 +53,14 @@ class ProductController extends Controller
     }
 
     /**
-     * Ver o produto.
+     * Ver o produto e a categoria.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        $product = $this->productRepository->getProductById($id);
+        return new ProductResource($product);
     }
 
     /**
@@ -70,30 +71,39 @@ class ProductController extends Controller
      */
     public function filterForCategory($id)
     {
-        dd('xs');
         $products = $this->productRepository->filterCategoryProducts($id);
     }
 
-    /**
-     * Update the specified resource in storage.
+   /**
+     * Cadastra o produto.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdateProduct $request, $id)
     {
-        //
+        $updateProdutct = $this->productRepository->updateProduct(
+            $request->validated(), $id
+        );
+
+        if (! $updateProdutct)
+        {
+            return response()->json([
+                'data' => []
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => ["Atualizado com sucesso!"]
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Remove o produto em questão.
      */
-    public function destroy($id)
+    public function destroy(Product $product): JsonResponse
     {
-        //
+        $product->delete();
+        return response()->json(null, 204);
     }
 }

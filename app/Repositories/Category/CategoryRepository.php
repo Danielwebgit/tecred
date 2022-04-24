@@ -20,4 +20,13 @@ class CategoryRepository
     {
         return $this->model::query()->select('name', 'active')->find($category_id);
     }
+
+    public function updateCategory(array $validatedData, int $category_id){
+        return $this->model::query()
+        ->where('id', $category_id)
+        ->update([
+            'name' => $validatedData['name'],
+            'active' => $validatedData['active']
+        ]);
+    }
 }

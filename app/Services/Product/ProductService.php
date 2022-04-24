@@ -20,4 +20,8 @@ class ProductService
             'category_id' => $productData['category_id']
         ]);
     }
+
+    public function updateProduct(array $productData){
+        dd($productData);
+    }
 }

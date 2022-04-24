@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
-use JetBrains\PhpStorm\ArrayShape;
 
 class StoreUpdateProduct extends FormRequest
 {
@@ -17,12 +16,6 @@ class StoreUpdateProduct extends FormRequest
         return true;
     }
 
-    #[ArrayShape([
-        'name' => 'string',
-        'quantity' => 'integer',
-        'active' => 'bool',
-        'category_id' => 'integer'
-    ])]
     public function rules()
     {
         return [

@@ -57,11 +57,11 @@ Route::group(['middleware' => ['apiJwt']], function(){
         Route::get('/{id}', [ProductController::class, 'show'])
         ->name('product.show');
 
-        Route::put('atualizar/{id}', [ProductController::class, 'update'])
-        ->name('product.update');
-
-        Route::delete('delete/{id}', [CategoryController::class, 'destroy'])
+        Route::delete('delete/{product}', [ProductController::class, 'destroy'])
         ->name('product.destroy');
+
+       Route::put('atualizar/{id}', [ProductController::class, 'update'])
+       ->name('product.update');
     });
 
     Route::prefix('categoria')->group(function(){
@@ -72,7 +72,7 @@ Route::group(['middleware' => ['apiJwt']], function(){
         Route::get('/todos', [CategoryController::class, 'index'])
         ->name('category.index');
 
-        Route::delete('delete/{id}', [CategoryController::class, 'destroy'])
+        Route::delete('delete/{category}', [CategoryController::class, 'destroy'])
         ->name('category.destroy');
 
         Route::put('atualizar/{id}', [CategoryController::class, 'update'])

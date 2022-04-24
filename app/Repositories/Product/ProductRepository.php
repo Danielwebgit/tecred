@@ -21,6 +21,12 @@ class ProductRepository
         dd($category_id);
     }
 
+    public function getProductById(int $product_id)
+    {
+        return $this->model::query()
+        ->find($product_id);
+    }
+
     public function findProduct(int $product_id): Collection|array
     {
         return $this->model::query()->select(
@@ -28,5 +34,17 @@ class ProductRepository
             'quantity',
             'active'
             )->find($product_id);
+    }
+
+    public function updateProduct(array $validatedData, int $product_id)
+    {
+        return $this->model::query()
+            ->where('id', $product_id)->select('name')
+            ->update([
+                'name' => $validatedData['name'],
+                'quantity' => $validatedData['quantity'],
+                'active' => $validatedData['active'],
+                'category_id' => $validatedData['category_id'],
+            ]);
     }
 }

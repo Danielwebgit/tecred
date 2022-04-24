@@ -15,6 +15,7 @@ class CategoryController extends Controller
     public function __construct(
         private CategoryRepository $categoryRepository
     ){}
+
     /**
      * Retorna a lista de todas as categorias.
      *
@@ -50,28 +51,33 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Atualiza o nome da categoria
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(StoreUpdateCategory $request, $id)
     {
-        dd($request);
+        $updateCategory = $this->categoryRepository->updateCategory(
+            $request->validated(), $id
+        );
+
+        if (! $updateCategory)
+        {
+            return response()->json([
+                'data' => []
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => ["Atualizado com sucesso!"]
+        ]);
     }
 
     /**
-     * Remove da lista de categorias.
+     * Remover da lista de categorias.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($category)
+    public function destroy(Category $category)
     {
-        $category = Category::find($category)->delete();
-
-        return response()->json('Deletado com sucesso!', 204);
+        $category->delete();
+        return response()->json(null, 204);
     }
 }
