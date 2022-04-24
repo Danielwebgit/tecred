@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\StoreUpdateProduct;
 use App\Http\Requests\ProductRequest;
-use App\Models\Product;
+use App\Http\Resources\ProductResource;
+use App\Repositories\Product\ProductRepository;
+use App\Services\Product\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        private ProductRepository $productRepository
+    ){}
     /**
      * Display a listing of the resource.
      *
@@ -16,25 +22,37 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return json_encode(Product::all());
+        $products = $this->productRepository->getProducts();
+        return ProductResource::collection($products);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Cadastra o produto.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(
-        ProductRequest $request,
-
+        StoreUpdateProduct $request,
+        ProductService $productService,
     )
     {
-        dd($request->validated());
+        $products = $productService->createProduct($request->validated());
+
+        if (! $products)
+        {
+            return response()->json([
+                'data' => []
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => ["Cadastro realizado com sucesso!"]
+        ]);
     }
 
     /**
-     * Display the specified resource.
+     * Ver o produto.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -42,6 +60,18 @@ class ProductController extends Controller
     public function show($id)
     {
         //
+    }
+
+    /**
+     * Retorna vários produtos por categoria.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function filterForCategory($id)
+    {
+        dd('xs');
+        $products = $this->productRepository->filterCategoryProducts($id);
     }
 
     /**

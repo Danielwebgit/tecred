@@ -9,13 +9,16 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $table = 'products';
+
     protected $fillable = [
         'name',
-        'email',
-        'quantity'
+        'quantity',
+        'active',
+        'category_id'
     ];
 
     public function category(){
-        return $this->belongsTo(Game::class);
+        return $this->belongsTo(Category::class);
     }
 }

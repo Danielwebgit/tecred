@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\Player;
+namespace App\Services\Product;
 
 use App\Models\Product;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductService
 {
@@ -17,7 +17,7 @@ class ProductService
             'name' => $productData['name'],
             'quantity' => $productData['quantity'],
             'active' => $productData['active'],
-            'active' => $productData['active'],
+            'category_id' => $productData['category_id']
         ]);
     }
 }

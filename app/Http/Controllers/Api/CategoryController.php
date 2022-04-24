@@ -3,62 +3,75 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Category\StoreUpdateCategory;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
+use App\Repositories\Category\CategoryRepository;
+use App\Services\Category\CategoryService;
 
 class CategoryController extends Controller
 {
+
+    public function __construct(
+        private CategoryRepository $categoryRepository
+    ){}
     /**
-     * Display a listing of the resource.
+     * Retorna a lista de todas as categorias.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        dd('xsx');
+        $categories = $this->categoryRepository->getCategories();
+        return CategoryResource::collection($categories);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Cadastra a categoria.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(
+        StoreUpdateCategory $request,
+        CategoryService $categoryService
+        )
     {
-        //
+        $category = $categoryService->createCategory($request->validated());
+
+        if (! $category)
+        {
+            return response()->json([
+                'data' => []
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => ["Cadastro realizado com sucesso!"]
+        ]);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Atualiza o nome da categoria
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdateCategory $request, $id)
     {
-        //
+        dd($request);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove da lista de categorias.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($category)
     {
-        //
+        $category = Category::find($category)->delete();
+
+        return response()->json('Deletado com sucesso!', 204);
     }
 }
